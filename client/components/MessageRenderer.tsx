@@ -110,7 +110,7 @@ function parseMarkdownElements(text: string): ReactNode[] {
       elements.push(
         <HeadingElement
           key={`h-${i}`}
-          className={`text-white ${headingClasses[HeadingTag]}`}
+          className={`text-white leading-[1.55] ${headingClasses[HeadingTag]}`}
         >
           {parseInlineMarkdown(content)}
         </HeadingElement>,
