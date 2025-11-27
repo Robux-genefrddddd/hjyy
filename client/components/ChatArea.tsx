@@ -592,7 +592,13 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
               {(loading || isThinking || isTyping) && (
                 <div className="flex w-full justify-start animate-springFade">
                   <div className="flex gap-2 items-start max-w-lg">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center flex-shrink-0 shadow-md border border-orange-400/50">
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-md border transition-all duration-300 ${
+                        isDark
+                          ? "bg-gradient-to-br from-orange-500 to-orange-600 border-orange-400/50"
+                          : "bg-gradient-to-br from-orange-400 to-orange-500 border-orange-300/50"
+                      }`}
+                    >
                       <span className="text-xs font-bold text-white">V</span>
                     </div>
                     {isTyping ? <TypingIndicator /> : <ThinkingAnimation />}
