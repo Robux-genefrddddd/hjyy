@@ -163,10 +163,10 @@ export default function Index() {
       {/* Main Content - Full width */}
       <div className="flex-1 flex flex-col">
         {/* Header with Menu Button */}
-        <div className="border-b border-white/20 px-4 md:px-6 py-4 backdrop-blur-md flex items-center justify-between bg-gradient-to-r from-background via-background/98 to-background/95 shadow-lg shadow-white/5">
+        <div className="border-b border-border px-4 md:px-6 py-3 flex items-center justify-between bg-background">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2.5 hover:bg-white/15 rounded-lg transition-all duration-200 text-white/60 hover:text-white hover:scale-110 transform"
+            className="p-2 hover:bg-secondary rounded-lg transition-all duration-200 text-muted-foreground hover:text-foreground"
             aria-label="Toggle Menu"
             title="Toggle Menu"
           >
@@ -174,7 +174,7 @@ export default function Index() {
           </button>
 
           <div className="flex-1 text-center">
-            <h1 className="text-lg font-bold text-white">VanIA Chat</h1>
+            <h1 className="text-base font-semibold text-foreground">VanIA</h1>
           </div>
 
           <div className="w-8" />
