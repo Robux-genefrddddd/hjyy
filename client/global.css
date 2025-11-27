@@ -309,28 +309,54 @@
     background: transparent;
   }
 
-  ::-webkit-scrollbar-thumb {
+  /* Dark mode scrollbar */
+  .dark ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.15);
     border-radius: 3px;
     transition: background-color 0.2s ease;
   }
 
-  ::-webkit-scrollbar-thumb:hover {
+  .dark ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.25);
   }
 
-  ::-webkit-scrollbar-thumb:active {
+  .dark ::-webkit-scrollbar-thumb:active {
     background: rgba(255, 255, 255, 0.4);
   }
 
-  /* Firefox */
-  * {
+  /* Light mode scrollbar */
+  :root:not(.dark) ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+  }
+
+  :root:not(.dark) ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  :root:not(.dark) ::-webkit-scrollbar-thumb:active {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  /* Firefox - Dark mode */
+  .dark {
     scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
     scrollbar-width: thin;
   }
 
-  *:hover {
+  .dark:hover {
     scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  }
+
+  /* Firefox - Light mode */
+  :root:not(.dark) {
+    scrollbar-color: rgba(0, 0, 0, 0.12) transparent;
+    scrollbar-width: thin;
+  }
+
+  :root:not(.dark):hover {
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
   }
 
   /* Glassmorphism effect */
