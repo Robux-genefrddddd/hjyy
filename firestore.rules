@@ -1,83 +1,96 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper functions
+
+    // --- Helper functions ---
     function isAuth() {
       return request.auth != null;
     }
-    
+
     function isAdmin() {
-      return isAuth() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('isAdmin', false) == true;
+      return isAuth()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('isAdmin', false) == true;
     }
-    
+
     function isOwner(userId) {
-      return request.auth.uid == userId;
+      return isAuth() && request.auth.uid == userId;
     }
-    
-    // Users collection - authenticated users only
+
+    function userExists(userId) {
+      return exists(/databases/$(database)/documents/users/$(userId));
+    }
+
+    // --- USERS ---
     match /users/{userId} {
       allow read: if isAuth();
-      allow create: if isAuth() && isOwner(userId);
+      allow create: if isOwner(userId);
       allow update: if isOwner(userId);
       allow delete: if isOwner(userId) || isAdmin();
     }
-    
-    // Licenses collection - admin only, or user can read their own
+
+    // --- LICENSES ---
     match /licenses/{licenseId} {
       allow read: if isAuth();
-      allow write: if isAdmin();
       allow create: if isAuth();
+      allow update, delete: if isAdmin();
     }
-    
-    // Conversations collection - user's own conversations
+
+    // --- CONVERSATIONS ---
     match /conversations/{conversationId} {
-      allow read: if isAuth() && resource.data.userId == request.auth.uid;
-      allow create: if isAuth();
-      allow update: if isAuth() && resource.data.userId == request.auth.uid;
-      allow delete: if isAuth() && resource.data.userId == request.auth.uid;
+      // READ / UPDATE / DELETE → vérifier propriétaire
+      allow read, update, delete: if isAuth()
+        && resource.data.userId == request.auth.uid;
+
+      // CREATE → vérifier via request.resource.data
+      allow create: if isAuth()
+        && request.resource.data.userId == request.auth.uid;
     }
-    
-    // Messages collection - user can read/write messages in their own conversations
+
+    // --- MESSAGES ---
     match /messages/{messageId} {
-      allow read: if isAuth() && exists(/databases/$(database)/documents/conversations/$(resource.data.conversationId)) && get(/databases/$(database)/documents/conversations/$(resource.data.conversationId)).data.userId == request.auth.uid;
-      allow create: if isAuth();
-      allow update: if isAuth() && resource.data.userId == request.auth.uid;
-      allow delete: if isAuth() && resource.data.userId == request.auth.uid;
+      // READ: conversation doit exister et appartenir à l'utilisateur
+      allow read: if isAuth()
+        && exists(/databases/$(database)/documents/conversations/$(resource.data.conversationId))
+        && get(/databases/$(database)/documents/conversations/$(resource.data.conversationId)).data.userId == request.auth.uid;
+
+      // CREATE: vérifier userId et que la conversation existe et appartient à l'utilisateur
+      allow create: if isAuth()
+        && request.resource.data.userId == request.auth.uid
+        && exists(/databases/$(database)/documents/conversations/$(request.resource.data.conversationId))
+        && get(/databases/$(database)/documents/conversations/$(request.resource.data.conversationId)).data.userId == request.auth.uid;
+
+      // UPDATE / DELETE → propriétaire du message
+      allow update, delete: if isAuth()
+        && resource.data.userId == request.auth.uid;
     }
-    
-    // User IPs - users can create, admins can read
+
+    // --- USER IPs ---
     match /user_ips/{docId} {
-      allow read: if isAdmin();
       allow create: if isAuth();
-      allow update: if isAdmin();
-      allow delete: if isAdmin();
+      allow read, update, delete: if isAdmin();
     }
-    
-    // IP Bans - admin only
+
+    // --- IP BANS ---
     match /ip_bans/{banId} {
-      allow read: if isAdmin();
-      allow write: if isAdmin();
-      allow delete: if isAdmin();
+      allow read, write, delete: if isAdmin();
     }
-    
-    // User Bans - admin only with user read access to their own
+
+    // --- USER BANS ---
     match /bans/{banId} {
-      allow read: if isAdmin() || (isAuth() && resource.data.userId == request.auth.uid);
-      allow write: if isAdmin();
-      allow delete: if isAdmin();
+      allow read: if isAdmin()
+        || (isAuth() && resource.data.userId == request.auth.uid);
+      allow write, delete: if isAdmin();
     }
-    
-    // Maintenance Notices - public read, admin write
+
+    // --- MAINTENANCE NOTICES ---
     match /maintenance_notices/{noticeId} {
       allow read: if true;
-      allow write: if isAdmin();
-      allow delete: if isAdmin();
+      allow write, delete: if isAdmin();
     }
-    
-    // Settings - admin only
+
+    // --- SETTINGS ---
     match /settings/{document=**} {
-      allow read: if isAdmin();
-      allow write: if isAdmin();
+      allow read, write: if isAdmin();
     }
   }
 }
