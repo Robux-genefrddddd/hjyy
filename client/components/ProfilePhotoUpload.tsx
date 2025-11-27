@@ -186,7 +186,7 @@ export function ProfilePhotoUpload({
             className="hidden"
             aria-label="Sélectionner une photo de profil"
           />
-          <p className="text-xs text-white/50 mt-2">Max 5MB • JPG, PNG, WebP</p>
+          <p className="text-xs text-foreground/40 mt-1.5">Max 5MB</p>
         </div>
       </div>
     </div>
