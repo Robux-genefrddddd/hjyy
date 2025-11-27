@@ -416,13 +416,15 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
       }}
     >
       {/* Main Content Area - Messages Container */}
-      <div className="flex-1 overflow-y-auto flex flex-col px-6 md:px-8 py-6 animate-fadeIn min-h-0 items-center">
+      <div className="flex-1 overflow-y-auto flex flex-col px-6 md:px-8 py-6 animate-fadeIn min-h-0 items-center transition-colors duration-300">
         <div className="w-full max-w-2xl">
           {!conversationId ? (
             <div className="flex h-full items-center justify-center">
               <div className="text-center">
                 <div
-                  className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center border-2 border-foreground/20 animate-scaleIn"
+                  className={`w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center border-2 animate-scaleIn transition-colors duration-300 ${
+                    isDark ? "border-foreground/20" : "border-[#3F3F3F]/20"
+                  }`}
                   style={{
                     backgroundImage:
                       "url(https://cdn.builder.io/api/v1/image/assets%2Fafa67d28f8874020a08a6dc1ed05801d%2F340d671f0c4b45db8b30096668d2bc7c)",
@@ -431,11 +433,17 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                     backgroundSize: "cover",
                   }}
                 />
-                <h2 className="text-lg font-semibold text-foreground mb-2 animate-slideUp">
+                <h2
+                  className={`text-lg font-semibold mb-2 animate-slideUp transition-colors duration-300 ${
+                    isDark ? "text-foreground" : "text-[#1A1A1A]"
+                  }`}
+                >
                   Sélectionnez une conversation
                 </h2>
                 <p
-                  className="text-sm text-foreground/60 animate-slideUp"
+                  className={`text-sm animate-slideUp transition-colors duration-300 ${
+                    isDark ? "text-foreground/60" : "text-[#3F3F3F]/60"
+                  }`}
                   style={{ animationDelay: "0.1s" }}
                 >
                   Cliquez sur une conversation à gauche pour commencer
@@ -444,13 +452,19 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
             </div>
           ) : loadingMessages ? (
             <div className="flex h-full items-center justify-center">
-              <Loader2 className="w-8 h-8 animate-spin text-foreground/50" />
+              <Loader2
+                className={`w-8 h-8 animate-spin transition-colors duration-300 ${
+                  isDark ? "text-foreground/50" : "text-[#3F3F3F]/50"
+                }`}
+              />
             </div>
           ) : chatMessages.length === 0 ? (
             <div className="flex h-full items-center justify-center">
               <div className="text-center">
                 <div
-                  className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center border-2 border-foreground/20 animate-scaleIn"
+                  className={`w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center border-2 animate-scaleIn transition-colors duration-300 ${
+                    isDark ? "border-foreground/20" : "border-[#3F3F3F]/20"
+                  }`}
                   style={{
                     backgroundImage:
                       "url(https://cdn.builder.io/api/v1/image/assets%2Fafa67d28f8874020a08a6dc1ed05801d%2F340d671f0c4b45db8b30096668d2bc7c)",
@@ -459,11 +473,17 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                     backgroundSize: "cover",
                   }}
                 />
-                <h2 className="text-lg font-semibold text-foreground mb-2 animate-slideUp">
+                <h2
+                  className={`text-lg font-semibold mb-2 animate-slideUp transition-colors duration-300 ${
+                    isDark ? "text-foreground" : "text-[#1A1A1A]"
+                  }`}
+                >
                   Commencez une conversation
                 </h2>
                 <p
-                  className="text-sm text-foreground/60 animate-slideUp"
+                  className={`text-sm animate-slideUp transition-colors duration-300 ${
+                    isDark ? "text-foreground/60" : "text-[#3F3F3F]/60"
+                  }`}
                   style={{ animationDelay: "0.1s" }}
                 >
                   Tapez un message ci-dessous pour commencer
