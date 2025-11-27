@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { signOut } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, updateDoc } from "firebase/firestore";
@@ -14,6 +15,7 @@ import { toast } from "sonner";
 
 export default function Index() {
   const { loading, userBan, maintenanceNotice, user, userData } = useAuth();
+  const { isDark } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [acknowledgedMaintenance, setAcknowledgedMaintenance] = useState(false);
   const [activeConversationId, setActiveConversationId] = useState<string>();
@@ -79,8 +81,12 @@ export default function Index() {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-background items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-white" />
+      <div className="flex h-screen bg-background items-center justify-center transition-colors duration-300">
+        <Loader2
+          className={`w-8 h-8 animate-spin transition-colors duration-300 ${
+            isDark ? "text-white" : "text-[#1A1A1A]"
+          }`}
+        />
       </div>
     );
   }
@@ -163,22 +169,56 @@ export default function Index() {
       {/* Main Content - Full width */}
       <div className="flex-1 flex flex-col">
         {/* Header with Menu Button */}
-        <div className="border-b border-white/10 px-3 py-2 flex items-center justify-between bg-background/50 backdrop-blur-sm">
+        <div
+          className={`border-b px-3 py-2 flex items-center justify-between backdrop-blur-sm transition-all duration-300 ${
+            isDark
+              ? "border-white/10 bg-background/50"
+              : "border-black/[0.08] bg-[#F3F4F6]/50"
+          }`}
+        >
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 hover:bg-white/10 rounded-lg transition-all duration-300 text-white/70 hover:text-white group relative"
+            className={`p-2 rounded-lg transition-all duration-300 group relative ${
+              isDark
+                ? "hover:bg-white/10 text-white/70 hover:text-white"
+                : "hover:bg-black/[0.08] text-[#3F3F3F]/70 hover:text-[#1A1A1A]"
+            }`}
             aria-label="Toggle Menu"
             title="Toggle Menu"
           >
             <div className="flex flex-col gap-1.5 w-5 h-5">
-              <span className="w-full h-0.5 bg-white/70 group-hover:bg-white transition-all duration-300 rounded-full" />
-              <span className="w-full h-0.5 bg-white/70 group-hover:bg-white transition-all duration-300 rounded-full" />
-              <span className="w-full h-0.5 bg-white/70 group-hover:bg-white transition-all duration-300 rounded-full" />
+              <span
+                className={`w-full h-0.5 transition-all duration-300 rounded-full ${
+                  isDark
+                    ? "bg-white/70 group-hover:bg-white"
+                    : "bg-[#3F3F3F]/70 group-hover:bg-[#1A1A1A]"
+                }`}
+              />
+              <span
+                className={`w-full h-0.5 transition-all duration-300 rounded-full ${
+                  isDark
+                    ? "bg-white/70 group-hover:bg-white"
+                    : "bg-[#3F3F3F]/70 group-hover:bg-[#1A1A1A]"
+                }`}
+              />
+              <span
+                className={`w-full h-0.5 transition-all duration-300 rounded-full ${
+                  isDark
+                    ? "bg-white/70 group-hover:bg-white"
+                    : "bg-[#3F3F3F]/70 group-hover:bg-[#1A1A1A]"
+                }`}
+              />
             </div>
           </button>
 
           <div className="absolute left-1/2 transform -translate-x-1/2">
-            <h1 className="text-sm font-semibold text-white/80">VanIA</h1>
+            <h1
+              className={`text-sm font-semibold transition-colors duration-300 ${
+                isDark ? "text-white/80" : "text-[#3F3F3F]/80"
+              }`}
+            >
+              VanIA
+            </h1>
           </div>
 
           <div className="w-10" />

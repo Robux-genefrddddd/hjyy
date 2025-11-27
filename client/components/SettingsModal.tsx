@@ -91,10 +91,22 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#0f0f0f] border-0 rounded-[12px] w-[460px] max-h-[85vh] flex flex-col p-0 overflow-hidden shadow-2xl">
+      <DialogContent
+        className={`border-0 rounded-[12px] w-[460px] max-h-[85vh] flex flex-col p-0 overflow-hidden shadow-2xl transition-all duration-300 ${
+          isDark ? "bg-[#0f0f0f]" : "bg-[#FAFAFA] border border-black/5"
+        }`}
+      >
         {/* Header */}
-        <DialogHeader className="px-6 py-4 border-b border-white/[0.06]">
-          <DialogTitle className="text-foreground text-lg font-semibold">
+        <DialogHeader
+          className={`px-6 py-4 border-b transition-all duration-300 ${
+            isDark ? "border-white/[0.06]" : "border-black/[0.08]"
+          }`}
+        >
+          <DialogTitle
+            className={`text-lg font-semibold transition-colors duration-300 ${
+              isDark ? "text-foreground" : "text-[#1A1A1A]"
+            }`}
+          >
             Paramètres
           </DialogTitle>
         </DialogHeader>
@@ -108,10 +120,20 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
                 className="animate-fadeIn"
                 style={{ animationDelay: "0.05s" }}
               >
-                <h3 className="text-xs font-semibold text-foreground/80 uppercase tracking-wider mb-3">
+                <h3
+                  className={`text-xs font-semibold uppercase tracking-wider mb-3 transition-colors duration-300 ${
+                    isDark ? "text-foreground/80" : "text-[#3F3F3F]/70"
+                  }`}
+                >
                   Photo de profil
                 </h3>
-                <div className="bg-white/[0.03] rounded-[10px] p-4 shadow-sm">
+                <div
+                  className={`rounded-[10px] p-4 shadow-sm transition-all duration-300 ${
+                    isDark
+                      ? "bg-white/[0.03]"
+                      : "bg-[#FFFFFF] border border-black/[0.08]"
+                  }`}
+                >
                   <ProfilePhotoUpload
                     userId={user.uid}
                     currentPhotoUrl={
@@ -127,7 +149,11 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
 
             {/* Section 2: Display Name / Pseudo */}
             <div className="animate-fadeIn" style={{ animationDelay: "0.1s" }}>
-              <h3 className="text-xs font-semibold text-foreground/80 uppercase tracking-wider mb-3">
+              <h3
+                className={`text-xs font-semibold uppercase tracking-wider mb-3 transition-colors duration-300 ${
+                  isDark ? "text-foreground/80" : "text-[#3F3F3F]/70"
+                }`}
+              >
                 Pseudo
               </h3>
               <div className="space-y-2">
@@ -137,13 +163,25 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
                   onChange={handleDisplayNameChange}
                   placeholder="Votre pseudo..."
                   maxLength={10}
-                  className="w-full bg-white/[0.03] border border-white/[0.06] rounded-[10px] px-3 py-2.5 text-foreground placeholder-foreground/40 focus:outline-none focus:border-primary/40 focus:bg-white/[0.05] transition-all duration-200 text-sm"
+                  className={`w-full border rounded-[10px] px-3 py-2.5 placeholder-opacity-50 focus:outline-none transition-all duration-200 text-sm ${
+                    isDark
+                      ? "bg-white/[0.03] border-white/[0.06] text-foreground placeholder-foreground/40 focus:border-primary/40 focus:bg-white/[0.05]"
+                      : "bg-[#FFFFFF] border-black/[0.08] text-[#1A1A1A] placeholder-[#3F3F3F]/50 focus:border-primary/40 focus:bg-[#FFFFFF]"
+                  }`}
                 />
                 <div className="flex items-center justify-between px-0.5">
-                  <p className="text-xs text-foreground/50">
+                  <p
+                    className={`text-xs transition-colors duration-300 ${
+                      isDark ? "text-foreground/50" : "text-[#3F3F3F]/60"
+                    }`}
+                  >
                     Max 10 caractères
                   </p>
-                  <span className="text-xs text-foreground/40">
+                  <span
+                    className={`text-xs transition-colors duration-300 ${
+                      isDark ? "text-foreground/40" : "text-[#3F3F3F]/50"
+                    }`}
+                  >
                     {displayName.length}/10
                   </span>
                 </div>
@@ -152,12 +190,26 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
 
             {/* Section 3: Dark Mode */}
             <div className="animate-fadeIn" style={{ animationDelay: "0.15s" }}>
-              <h3 className="text-xs font-semibold text-foreground/80 uppercase tracking-wider mb-3">
+              <h3
+                className={`text-xs font-semibold uppercase tracking-wider mb-3 transition-colors duration-300 ${
+                  isDark ? "text-foreground/80" : "text-[#3F3F3F]/70"
+                }`}
+              >
                 Apparence
               </h3>
-              <div className="bg-white/[0.03] rounded-[10px] p-3.5 flex items-center justify-between shadow-sm">
+              <div
+                className={`rounded-[10px] p-3.5 flex items-center justify-between shadow-sm transition-all duration-300 ${
+                  isDark
+                    ? "bg-white/[0.03]"
+                    : "bg-[#FFFFFF] border border-black/[0.08]"
+                }`}
+              >
                 <div>
-                  <p className="text-sm font-medium text-foreground">
+                  <p
+                    className={`text-sm font-medium transition-colors duration-300 ${
+                      isDark ? "text-foreground" : "text-[#1A1A1A]"
+                    }`}
+                  >
                     Mode sombre
                   </p>
                 </div>
@@ -166,12 +218,14 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
                 <button
                   onClick={handleDarkModeToggle}
                   className={`relative w-12 h-7 rounded-full transition-all duration-300 flex items-center ${
-                    isDark ? "bg-primary/40" : "bg-white/[0.1]"
+                    isDark ? "bg-primary/40" : "bg-primary/20"
                   }`}
                 >
                   <div
-                    className={`absolute w-6 h-6 rounded-full bg-white shadow-md transition-all duration-300 flex items-center justify-center ${
-                      isDark ? "translate-x-5" : "translate-x-0.5"
+                    className={`absolute w-6 h-6 rounded-full shadow-md transition-all duration-300 flex items-center justify-center ${
+                      isDark
+                        ? "bg-white translate-x-5"
+                        : "bg-white translate-x-0.5"
                     }`}
                   >
                     {isDark ? (
@@ -186,14 +240,32 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
 
             {/* Section 4: Email Display */}
             <div className="animate-fadeIn" style={{ animationDelay: "0.2s" }}>
-              <h3 className="text-xs font-semibold text-foreground/80 uppercase tracking-wider mb-3">
+              <h3
+                className={`text-xs font-semibold uppercase tracking-wider mb-3 transition-colors duration-300 ${
+                  isDark ? "text-foreground/80" : "text-[#3F3F3F]/70"
+                }`}
+              >
                 Compte
               </h3>
-              <div className="bg-white/[0.03] rounded-[10px] p-3.5 shadow-sm">
-                <p className="text-xs text-foreground/50 mb-1">
+              <div
+                className={`rounded-[10px] p-3.5 shadow-sm transition-all duration-300 ${
+                  isDark
+                    ? "bg-white/[0.03]"
+                    : "bg-[#FFFFFF] border border-black/[0.08]"
+                }`}
+              >
+                <p
+                  className={`text-xs mb-1 transition-colors duration-300 ${
+                    isDark ? "text-foreground/50" : "text-[#3F3F3F]/50"
+                  }`}
+                >
                   Adresse e-mail
                 </p>
-                <p className="text-sm text-foreground truncate">
+                <p
+                  className={`text-sm truncate transition-colors duration-300 ${
+                    isDark ? "text-foreground" : "text-[#1A1A1A]"
+                  }`}
+                >
                   {user?.email || "..."}
                 </p>
               </div>
@@ -202,14 +274,24 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
         </div>
 
         {/* Sticky Footer with Buttons */}
-        <div className="border-t border-white/[0.06] px-6 py-4 space-y-2.5 bg-[#0a0a0a]/50 backdrop-blur-sm">
+        <div
+          className={`border-t px-6 py-4 space-y-2.5 backdrop-blur-sm transition-all duration-300 ${
+            isDark
+              ? "border-white/[0.06] bg-[#0a0a0a]/50"
+              : "border-black/[0.08] bg-white/40"
+          }`}
+        >
           <button
             onClick={handleSaveChanges}
             disabled={!hasChanges || isSaving}
             className={`w-full px-4 py-3 font-medium text-sm rounded-[10px] transition-all duration-300 flex items-center justify-center gap-2 ${
               saveSuccess
-                ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                : "bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 hover:border-primary/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                ? isDark
+                  ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                  : "bg-green-100 text-green-700 border border-green-300"
+                : isDark
+                  ? "bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 hover:border-primary/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  : "bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 hover:border-primary/50 disabled:opacity-50 disabled:cursor-not-allowed"
             }`}
           >
             {isSaving ? (
@@ -229,7 +311,11 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
 
           <button
             onClick={handleLogout}
-            className="w-full px-4 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 hover:border-red-500/50 font-medium text-sm rounded-[10px] transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-sm"
+            className={`w-full px-4 py-3 font-medium text-sm rounded-[10px] transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-sm ${
+              isDark
+                ? "bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 hover:border-red-500/50"
+                : "bg-red-100 hover:bg-red-200 text-red-700 border border-red-300 hover:border-red-400"
+            }`}
           >
             <LogOut size={16} />
             <span>Se déconnecter</span>

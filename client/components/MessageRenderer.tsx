@@ -1,6 +1,7 @@
 import { Copy, Check } from "lucide-react";
 import { useState, ReactNode } from "react";
 import { escapeHtml } from "@/lib/security";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface MessageRendererProps {
   content: string;
@@ -15,6 +16,7 @@ function CodeBlockWithCopy({
   language: string;
   code: string;
 }) {
+  const { isDark } = useTheme();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -25,24 +27,46 @@ function CodeBlockWithCopy({
 
   return (
     <div
-      className="my-3 rounded-lg overflow-hidden border border-white/10 shadow-lg hover:shadow-xl transition-shadow"
-      style={{ backgroundColor: "#0f1117" }}
+      className={`my-3 rounded-lg overflow-hidden border shadow-lg hover:shadow-xl transition-all duration-300 ${
+        isDark ? "border-white/10" : "border-black/[0.08]"
+      }`}
+      style={{
+        backgroundColor: isDark ? "#0f1117" : "#F5F5F5",
+      }}
     >
       <div
-        className="flex items-center justify-between px-4 py-3 border-b border-white/10"
-        style={{ backgroundColor: "rgba(88, 166, 255, 0.1)" }}
+        className="flex items-center justify-between px-4 py-3 border-b transition-all duration-300"
+        style={{
+          backgroundColor: isDark
+            ? "rgba(88, 166, 255, 0.1)"
+            : "rgba(59, 130, 246, 0.05)",
+          borderColor: isDark
+            ? "rgba(255, 255, 255, 0.1)"
+            : "rgba(0, 0, 0, 0.08)",
+        }}
       >
-        <span className="text-xs font-mono text-orange-300 font-semibold uppercase tracking-wide">
+        <span
+          className={`text-xs font-mono font-semibold uppercase tracking-wide transition-colors duration-300 ${
+            isDark ? "text-orange-300" : "text-orange-600"
+          }`}
+        >
           {language || "code"}
         </span>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-white/70 hover:text-white text-xs font-medium transition-all duration-200 hover:shadow-md"
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 hover:shadow-md ${
+            isDark
+              ? "bg-white/10 hover:bg-white/20 text-white/70 hover:text-white"
+              : "bg-black/[0.08] hover:bg-black/[0.12] text-[#3F3F3F] hover:text-[#1A1A1A]"
+          }`}
           title="Copier le code"
         >
           {copied ? (
             <>
-              <Check size={14} className="text-green-400" />
+              <Check
+                size={14}
+                className={isDark ? "text-green-400" : "text-green-600"}
+              />
               <span>Copié!</span>
             </>
           ) : (
@@ -54,7 +78,11 @@ function CodeBlockWithCopy({
         </button>
       </div>
       <pre className="p-4 overflow-x-auto">
-        <code className="font-mono text-sm leading-[1.55] text-white/90 whitespace-pre">
+        <code
+          className={`font-mono text-sm leading-[1.55] whitespace-pre transition-colors duration-300 ${
+            isDark ? "text-white/90" : "text-[#1A1A1A]/90"
+          }`}
+        >
           {escapeHtml(code)}
         </code>
       </pre>
@@ -62,7 +90,7 @@ function CodeBlockWithCopy({
   );
 }
 
-function parseMarkdownElements(text: string): ReactNode[] {
+function parseMarkdownElements(text: string, isDark: boolean): ReactNode[] {
   const lines = text.split("\n");
   const elements: ReactNode[] = [];
   let i = 0;
@@ -98,8 +126,8 @@ function parseMarkdownElements(text: string): ReactNode[] {
       const content = headerMatch[2];
       const HeadingTag = `h${level}` as const;
       const headingClasses = {
-        h1: "text-3xl font-bold mb-4 mt-6 border-b border-white/20 pb-2",
-        h2: "text-2xl font-bold mb-3 mt-5 border-b border-white/10 pb-2",
+        h1: "text-3xl font-bold mb-4 mt-6 border-b pb-2",
+        h2: "text-2xl font-bold mb-3 mt-5 border-b pb-2",
         h3: "text-xl font-bold mb-2 mt-4",
         h4: "text-lg font-bold mb-2 mt-3",
         h5: "text-base font-bold mb-2 mt-2",
@@ -110,9 +138,13 @@ function parseMarkdownElements(text: string): ReactNode[] {
       elements.push(
         <HeadingElement
           key={`h-${i}`}
-          className={`text-white leading-[1.55] ${headingClasses[HeadingTag]}`}
+          className={`leading-[1.55] transition-all duration-300 ${
+            isDark
+              ? "text-white border-white/20"
+              : "text-[#1A1A1A] border-black/[0.08]"
+          } ${headingClasses[HeadingTag]}`}
         >
-          {parseInlineMarkdown(content)}
+          {parseInlineMarkdown(content, isDark)}
         </HeadingElement>,
       );
       i++;
@@ -130,10 +162,16 @@ function parseMarkdownElements(text: string): ReactNode[] {
       elements.push(
         <blockquote
           key={`quote-${i}`}
-          className="border-l-4 border-orange-500 pl-4 py-2 my-3 text-white/70 italic rounded-r-lg leading-[1.55]"
-          style={{ backgroundColor: "rgba(88, 166, 255, 0.08)" }}
+          className={`border-l-4 border-orange-500 pl-4 py-2 my-3 italic rounded-r-lg leading-[1.55] transition-all duration-300 ${
+            isDark ? "text-white/70" : "text-[#3F3F3F]/70"
+          }`}
+          style={{
+            backgroundColor: isDark
+              ? "rgba(88, 166, 255, 0.08)"
+              : "rgba(59, 130, 246, 0.05)",
+          }}
         >
-          {parseInlineMarkdown(quoteText)}
+          {parseInlineMarkdown(quoteText, isDark)}
         </blockquote>,
       );
       continue;
@@ -162,11 +200,18 @@ function parseMarkdownElements(text: string): ReactNode[] {
         elements.push(
           <ol
             key={`ol-${i}`}
-            className="list-decimal list-inside mb-3 space-y-2 text-white/90 pl-2"
+            className={`list-decimal list-inside mb-3 space-y-2 pl-2 transition-all duration-300 ${
+              isDark ? "text-white/90" : "text-[#1A1A1A]/90"
+            }`}
           >
             {listItems.map((item, idx) => (
-              <li key={idx} className="text-white/90 leading-[1.55]">
-                {parseInlineMarkdown(item)}
+              <li
+                key={idx}
+                className={`leading-[1.55] transition-all duration-300 ${
+                  isDark ? "text-white/90" : "text-[#1A1A1A]/90"
+                }`}
+              >
+                {parseInlineMarkdown(item, isDark)}
               </li>
             ))}
           </ol>,
@@ -175,11 +220,18 @@ function parseMarkdownElements(text: string): ReactNode[] {
         elements.push(
           <ul
             key={`ul-${i}`}
-            className="list-disc list-inside mb-3 space-y-2 text-white/90 pl-2"
+            className={`list-disc list-inside mb-3 space-y-2 pl-2 transition-all duration-300 ${
+              isDark ? "text-white/90" : "text-[#1A1A1A]/90"
+            }`}
           >
             {listItems.map((item, idx) => (
-              <li key={idx} className="text-white/90 leading-[1.55]">
-                {parseInlineMarkdown(item)}
+              <li
+                key={idx}
+                className={`leading-[1.55] transition-all duration-300 ${
+                  isDark ? "text-white/90" : "text-[#1A1A1A]/90"
+                }`}
+              >
+                {parseInlineMarkdown(item, isDark)}
               </li>
             ))}
           </ul>,
@@ -191,8 +243,13 @@ function parseMarkdownElements(text: string): ReactNode[] {
     // Regular paragraphs
     if (trimmed) {
       elements.push(
-        <p key={`p-${i}`} className="mb-3 leading-[1.55] text-white/90">
-          {parseInlineMarkdown(trimmed)}
+        <p
+          key={`p-${i}`}
+          className={`mb-3 leading-[1.55] transition-all duration-300 ${
+            isDark ? "text-white/90" : "text-[#1A1A1A]/90"
+          }`}
+        >
+          {parseInlineMarkdown(trimmed, isDark)}
         </p>,
       );
     }
@@ -203,7 +260,7 @@ function parseMarkdownElements(text: string): ReactNode[] {
   return elements;
 }
 
-function parseInlineMarkdown(text: string): ReactNode[] {
+function parseInlineMarkdown(text: string, isDark: boolean): ReactNode[] {
   const parts: ReactNode[] = [];
   let lastIndex = 0;
 
@@ -286,14 +343,24 @@ function parseInlineMarkdown(text: string): ReactNode[] {
     switch (m.type) {
       case "bold":
         parts.push(
-          <strong key={idx} className="font-bold text-white">
+          <strong
+            key={idx}
+            className={`font-bold transition-colors duration-300 ${
+              isDark ? "text-white" : "text-[#1A1A1A]"
+            }`}
+          >
             {escapeHtml(m.content)}
           </strong>,
         );
         break;
       case "italic":
         parts.push(
-          <em key={idx} className="italic text-white/95">
+          <em
+            key={idx}
+            className={`italic transition-colors duration-300 ${
+              isDark ? "text-white/95" : "text-[#1A1A1A]/95"
+            }`}
+          >
             {escapeHtml(m.content)}
           </em>,
         );
@@ -302,7 +369,11 @@ function parseInlineMarkdown(text: string): ReactNode[] {
         parts.push(
           <code
             key={idx}
-            className="bg-white/15 px-2 py-1 rounded font-mono text-sm text-orange-300 border border-white/10 font-semibold"
+            className={`px-2 py-1 rounded font-mono text-sm border font-semibold transition-all duration-300 ${
+              isDark
+                ? "bg-white/15 text-orange-300 border-white/10"
+                : "bg-orange-100/50 text-orange-700 border-orange-200"
+            }`}
           >
             {escapeHtml(m.content)}
           </code>,
@@ -315,7 +386,11 @@ function parseInlineMarkdown(text: string): ReactNode[] {
             href={m.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-orange-400 hover:text-orange-300 underline font-medium transition-colors"
+            className={`underline font-medium transition-colors duration-300 ${
+              isDark
+                ? "text-orange-400 hover:text-orange-300"
+                : "text-orange-600 hover:text-orange-700"
+            }`}
           >
             {escapeHtml(m.content)}
           </a>,
@@ -341,6 +416,8 @@ export function MessageRenderer({
   role,
   isStreaming = false,
 }: MessageRendererProps) {
+  const { isDark } = useTheme();
+
   // Check if content is an image URL
   const imageUrlPattern = /^https?:\/\/[^\s]+\.(jpg|jpeg|png|gif|webp|svg)$/i;
   const isImageUrl = imageUrlPattern.test(content.trim());
@@ -348,7 +425,11 @@ export function MessageRenderer({
   if (isImageUrl) {
     return (
       <div className="flex justify-center">
-        <div className="rounded-3xl overflow-hidden border-2 border-white/20 shadow-lg max-w-xs">
+        <div
+          className={`rounded-3xl overflow-hidden border-2 shadow-lg max-w-xs transition-all duration-300 ${
+            isDark ? "border-white/20" : "border-black/[0.08]"
+          }`}
+        >
           <img
             src={content}
             alt="Message content"
@@ -359,13 +440,17 @@ export function MessageRenderer({
     );
   }
 
-  const elements = parseMarkdownElements(content);
+  const elements = parseMarkdownElements(content, isDark);
 
   return (
     <div>
       {elements}
       {isStreaming && (
-        <span className="inline-block w-2 h-5 bg-white/50 ml-1 animate-pulse" />
+        <span
+          className={`inline-block w-2 h-5 ml-1 animate-pulse transition-colors duration-300 ${
+            isDark ? "bg-white/50" : "bg-[#3F3F3F]/50"
+          }`}
+        />
       )}
     </div>
   );

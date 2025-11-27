@@ -13,6 +13,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { toast } from "sonner";
 import { MessagesService } from "@/lib/messages";
 import {
@@ -54,6 +55,7 @@ export function Sidebar({
   onConversationSelect,
 }: SidebarProps) {
   const { user, userData, loading } = useAuth();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loadingConversations, setLoadingConversations] = useState(true);
@@ -206,32 +208,58 @@ export function Sidebar({
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 md:hidden"
+          className={`fixed inset-0 md:hidden transition-colors duration-300 ${
+            isDark ? "bg-black/50" : "bg-black/30"
+          }`}
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 w-44 sm:w-48 bg-sidebar border-r border-white/[0.08] flex flex-col transition-transform duration-300 ${
+        className={`fixed inset-y-0 left-0 w-44 sm:w-48 flex flex-col transition-all duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } z-50 animate-slideInLeft`}
+        } z-50 animate-slideInLeft ${
+          isDark
+            ? "bg-sidebar border-r border-white/[0.08]"
+            : "bg-[#FFFFFF] border-r border-black/[0.08]"
+        }`}
       >
         {/* Header - Minimal */}
-        <div className="pt-5 px-3 pb-3 animate-fadeIn border-b border-white/[0.08]">
+        <div
+          className={`pt-5 px-3 pb-3 animate-fadeIn border-b transition-all duration-300 ${
+            isDark ? "border-white/[0.08]" : "border-black/[0.08]"
+          }`}
+        >
           <div className="flex items-center gap-2.5 justify-between mb-2.5">
             <button
               onClick={() => setIsSettingsOpen(true)}
-              className="flex items-center gap-2 min-w-0 flex-1 hover:opacity-80 transition-opacity rounded-lg p-1 -m-1"
+              className={`flex items-center gap-2 min-w-0 flex-1 hover:opacity-80 transition-opacity rounded-lg p-1 -m-1 ${
+                isDark ? "" : ""
+              }`}
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-primary/80 to-primary rounded-full flex items-center justify-center text-primary-foreground text-xs font-semibold flex-shrink-0 shadow-md border border-primary/30 hover-lift">
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0 shadow-md border transition-all duration-300 ${
+                  isDark
+                    ? "bg-gradient-to-br from-primary/80 to-primary text-primary-foreground border-primary/30"
+                    : "bg-gradient-to-br from-primary/60 to-primary/50 text-white border-primary/40"
+                }`}
+              >
                 {userInitial}
               </div>
               <div className="hidden sm:block min-w-0 flex-1">
-                <p className="text-xs font-medium text-foreground truncate leading-tight">
+                <p
+                  className={`text-xs font-medium truncate leading-tight transition-colors duration-300 ${
+                    isDark ? "text-foreground" : "text-[#1A1A1A]"
+                  }`}
+                >
                   {loading ? "..." : userData?.displayName || "User"}
                 </p>
-                <p className="text-xs text-muted-foreground truncate leading-tight">
+                <p
+                  className={`text-xs truncate leading-tight transition-colors duration-300 ${
+                    isDark ? "text-muted-foreground" : "text-[#3F3F3F]/70"
+                  }`}
+                >
                   {loading ? "..." : userData?.email?.split("@")[0] || "Pro"}
                 </p>
               </div>
@@ -239,7 +267,11 @@ export function Sidebar({
             <div className="flex items-center gap-1">
               <button
                 onClick={onClose}
-                className="p-1.5 hover:bg-white/[0.08] rounded-lg transition-all text-foreground/60 hover:text-foreground flex-shrink-0 hover:-translate-y-0.5"
+                className={`p-1.5 rounded-lg transition-all flex-shrink-0 hover:-translate-y-0.5 ${
+                  isDark
+                    ? "hover:bg-white/[0.08] text-foreground/60 hover:text-foreground"
+                    : "hover:bg-black/[0.08] text-[#3F3F3F]/60 hover:text-[#1A1A1A]"
+                }`}
                 aria-label="Close"
                 title="Close"
               >
@@ -247,18 +279,34 @@ export function Sidebar({
               </button>
               <Popover open={isMenuOpen} onOpenChange={setIsMenuOpen}>
                 <PopoverTrigger asChild>
-                  <button className="p-1.5 hover:bg-white/[0.08] rounded-lg transition-all text-foreground/60 hover:text-foreground flex-shrink-0 hover:-translate-y-0.5">
+                  <button
+                    className={`p-1.5 rounded-lg transition-all flex-shrink-0 hover:-translate-y-0.5 ${
+                      isDark
+                        ? "hover:bg-white/[0.08] text-foreground/60 hover:text-foreground"
+                        : "hover:bg-black/[0.08] text-[#3F3F3F]/60 hover:text-[#1A1A1A]"
+                    }`}
+                  >
                     <MoreVertical size={16} />
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-40 p-1 bg-card border border-white/[0.1] rounded-lg shadow-lg">
+                <PopoverContent
+                  className={`w-40 p-1 border rounded-lg shadow-lg transition-all duration-300 ${
+                    isDark
+                      ? "bg-card border-white/[0.1]"
+                      : "bg-[#FAFAFA] border-black/[0.08]"
+                  }`}
+                >
                   <div className="space-y-0.5">
                     <button
                       onClick={() => {
                         setIsSettingsOpen(true);
                         setIsMenuOpen(false);
                       }}
-                      className="w-full text-left px-3 py-2 rounded-lg text-xs text-foreground/70 hover:text-foreground hover:bg-white/[0.08] transition-colors hover:-translate-y-0.5"
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-all hover:-translate-y-0.5 ${
+                        isDark
+                          ? "text-foreground/70 hover:text-foreground hover:bg-white/[0.08]"
+                          : "text-[#3F3F3F]/70 hover:text-[#1A1A1A] hover:bg-black/[0.08]"
+                      }`}
                     >
                       Paramètres
                     </button>
@@ -267,19 +315,31 @@ export function Sidebar({
                         setIsHelpOpen(true);
                         setIsMenuOpen(false);
                       }}
-                      className="w-full text-left px-3 py-2 rounded-lg text-xs text-foreground/70 hover:text-foreground hover:bg-white/[0.08] transition-colors hover:-translate-y-0.5"
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-all hover:-translate-y-0.5 ${
+                        isDark
+                          ? "text-foreground/70 hover:text-foreground hover:bg-white/[0.08]"
+                          : "text-[#3F3F3F]/70 hover:text-[#1A1A1A] hover:bg-black/[0.08]"
+                      }`}
                     >
                       Aide
                     </button>
                     {userData?.isAdmin && (
                       <>
-                        <div className="h-px bg-white/[0.08] my-0.5" />
+                        <div
+                          className={`h-px my-0.5 transition-colors duration-300 ${
+                            isDark ? "bg-white/[0.08]" : "bg-black/[0.08]"
+                          }`}
+                        />
                         <button
                           onClick={() => {
                             navigate("/admin");
                             setIsMenuOpen(false);
                           }}
-                          className="w-full text-left px-3 py-2 rounded-lg text-xs text-primary font-medium hover:bg-white/[0.08] transition-colors hover:-translate-y-0.5"
+                          className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all hover:-translate-y-0.5 text-primary ${
+                            isDark
+                              ? "hover:bg-white/[0.08]"
+                              : "hover:bg-black/[0.08]"
+                          }`}
                         >
                           Admin
                         </button>
@@ -290,7 +350,11 @@ export function Sidebar({
               </Popover>
             </div>
           </div>
-          <p className="text-xs text-foreground/50 truncate hidden sm:block">
+          <p
+            className={`text-xs truncate hidden sm:block transition-colors duration-300 ${
+              isDark ? "text-foreground/50" : "text-[#3F3F3F]/50"
+            }`}
+          >
             {loading ? "..." : userData?.email}
           </p>
         </div>
@@ -303,7 +367,11 @@ export function Sidebar({
           <button
             id="new-conversation-btn"
             onClick={handleNewConversation}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-primary/20 hover:bg-primary/30 text-primary font-medium text-xs rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:opacity-95 hover:-translate-y-px active:scale-95"
+            className={`w-full flex items-center justify-center gap-2 px-3 py-2 font-medium text-xs rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:opacity-95 hover:-translate-y-px active:scale-95 ${
+              isDark
+                ? "bg-primary/20 hover:bg-primary/30 text-primary"
+                : "bg-primary/10 hover:bg-primary/20 text-primary"
+            }`}
           >
             <Plus size={16} className="flex-shrink-0" />
             <span>New</span>
@@ -331,16 +399,24 @@ export function Sidebar({
                 <div
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-lg transition-all border shadow-sm group-hover:-translate-y-px ${
                     conv.id === activeConversationId
-                      ? "bg-primary/15 border-primary/50 text-foreground shadow-md"
-                      : "border-white/[0.08] hover:bg-white/[0.05] text-muted-foreground hover:text-foreground hover:shadow-md hover:border-primary/30"
+                      ? isDark
+                        ? "bg-primary/15 border-primary/50 text-foreground shadow-md"
+                        : "bg-primary/10 border-primary/30 text-[#1A1A1A] shadow-md"
+                      : isDark
+                        ? "border-white/[0.08] hover:bg-white/[0.05] text-muted-foreground hover:text-foreground hover:shadow-md hover:border-primary/30"
+                        : "border-black/[0.08] hover:bg-black/[0.05] text-[#3F3F3F]/70 hover:text-[#1A1A1A] hover:shadow-md hover:border-primary/30"
                   }`}
                 >
                   <button
                     onClick={() => onConversationSelect?.(conv.id)}
                     className={`flex-1 text-left text-xs transition-all py-1 px-1 rounded-lg truncate ${
                       conv.id === activeConversationId
-                        ? "text-foreground font-medium"
-                        : "text-foreground/70 hover:text-foreground"
+                        ? isDark
+                          ? "text-foreground font-medium"
+                          : "text-[#1A1A1A] font-medium"
+                        : isDark
+                          ? "text-foreground/70 hover:text-foreground"
+                          : "text-[#3F3F3F]/70 hover:text-[#1A1A1A]"
                     }`}
                   >
                     {conv.name}
@@ -348,14 +424,22 @@ export function Sidebar({
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => handleEditConversation(conv.id, conv.name)}
-                      className="p-1.5 text-foreground/60 hover:text-foreground hover:bg-white/10 rounded-lg transition-all hover:-translate-y-0.5"
+                      className={`p-1.5 rounded-lg transition-all hover:-translate-y-0.5 ${
+                        isDark
+                          ? "text-foreground/60 hover:text-foreground hover:bg-white/10"
+                          : "text-[#3F3F3F]/60 hover:text-[#1A1A1A] hover:bg-black/[0.08]"
+                      }`}
                       title="Edit"
                     >
                       <Edit2 size={14} />
                     </button>
                     <button
                       onClick={() => handleDeleteConversation(conv.id)}
-                      className="p-1.5 text-foreground/60 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all hover:-translate-y-0.5"
+                      className={`p-1.5 rounded-lg transition-all hover:-translate-y-0.5 ${
+                        isDark
+                          ? "text-foreground/60 hover:text-red-400 hover:bg-red-500/10"
+                          : "text-[#3F3F3F]/60 hover:text-red-600 hover:bg-red-100/50"
+                      }`}
                       title="Delete"
                     >
                       <Trash2 size={14} />
@@ -370,7 +454,11 @@ export function Sidebar({
         {/* Message Usage Section */}
         <div
           id="messages-counter"
-          className="px-3 py-2.5 border-t border-white/[0.08] animate-fadeIn bg-white/[0.02] rounded-[10px] shadow-sm"
+          className={`px-3 py-2.5 border-t animate-fadeIn rounded-[10px] shadow-sm transition-all duration-300 ${
+            isDark
+              ? "border-white/[0.08] bg-white/[0.02]"
+              : "border-black/[0.08] bg-black/[0.02]"
+          }`}
           style={{
             animationDelay: "0.25s",
             marginLeft: "20px",
@@ -380,23 +468,35 @@ export function Sidebar({
           }}
         >
           <div className="flex items-center gap-2 mb-2.5 justify-between">
-            <span className="text-xs text-foreground/70 font-medium">
+            <span
+              className={`text-xs font-medium transition-colors duration-300 ${
+                isDark ? "text-foreground/70" : "text-[#3F3F3F]/70"
+              }`}
+            >
               Messages
             </span>
             <button
               onClick={handleSyncMessages}
               disabled={isSyncing}
-              className="p-1.5 hover:bg-white/10 rounded-lg transition-colors disabled:opacity-50 hover:-translate-y-0.5"
+              className={`p-1.5 rounded-lg transition-all disabled:opacity-50 hover:-translate-y-0.5 ${
+                isDark ? "hover:bg-white/10" : "hover:bg-black/[0.08]"
+              }`}
               title="Synchroniser"
             >
               {isSyncing ? (
                 <Loader2
                   size={14}
-                  className="animate-spin text-foreground/60"
+                  className={`animate-spin transition-colors duration-300 ${
+                    isDark ? "text-foreground/60" : "text-[#3F3F3F]/60"
+                  }`}
                 />
               ) : (
                 <svg
-                  className="w-4 h-4 text-foreground/60 hover:text-foreground transition-colors"
+                  className={`w-4 h-4 transition-colors duration-300 ${
+                    isDark
+                      ? "text-foreground/60 hover:text-foreground"
+                      : "text-[#3F3F3F]/60 hover:text-[#1A1A1A]"
+                  }`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -412,13 +512,21 @@ export function Sidebar({
             </button>
           </div>
           <div className="space-y-1.5">
-            <div className="relative h-2 bg-white/[0.08] rounded-full overflow-hidden">
+            <div
+              className={`relative h-2 rounded-full overflow-hidden transition-colors duration-300 ${
+                isDark ? "bg-white/[0.08]" : "bg-black/[0.08]"
+              }`}
+            >
               <div
                 className="h-full bg-gradient-to-r from-primary/60 to-primary/80 rounded-full transition-all shadow-sm"
                 style={{ width: `${(messagesUsed / messagesLimit) * 100}%` }}
               ></div>
             </div>
-            <p className="text-xs text-foreground/60">
+            <p
+              className={`text-xs transition-colors duration-300 ${
+                isDark ? "text-foreground/60" : "text-[#3F3F3F]/60"
+              }`}
+            >
               {messagesLimit - messagesUsed} sur {messagesLimit} restants
             </p>
           </div>
@@ -426,12 +534,18 @@ export function Sidebar({
 
         {/* Footer - Sign Out */}
         <div
-          className="px-3 py-4 border-t border-white/[0.08] animate-fadeIn"
+          className={`px-3 py-4 border-t animate-fadeIn transition-all duration-300 ${
+            isDark ? "border-white/[0.08]" : "border-black/[0.08]"
+          }`}
           style={{ animationDelay: "0.3s" }}
         >
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 text-red-400/80 hover:text-red-400 border border-red-500/30 hover:border-red-500/50 hover:bg-red-500/10 transition-all text-xs font-medium rounded-lg hover:opacity-95 hover:-translate-y-px active:scale-95 shadow-sm hover:shadow-md"
+            className={`w-full flex items-center justify-center gap-2 px-3 py-2 border transition-all text-xs font-medium rounded-lg hover:opacity-95 hover:-translate-y-px active:scale-95 shadow-sm hover:shadow-md ${
+              isDark
+                ? "text-red-400/80 hover:text-red-400 border-red-500/30 hover:border-red-500/50 hover:bg-red-500/10"
+                : "text-red-600/80 hover:text-red-700 border-red-300/50 hover:border-red-400/50 hover:bg-red-100/50"
+            }`}
           >
             <LogOut size={16} />
             <span>Se déconnecter</span>
@@ -441,9 +555,19 @@ export function Sidebar({
 
       {/* Edit Conversation Modal */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="bg-card border border-white/[0.1] rounded-xl">
+        <DialogContent
+          className={`border rounded-xl transition-all duration-300 ${
+            isDark
+              ? "bg-card border-white/[0.1]"
+              : "bg-[#FAFAFA] border-black/[0.08]"
+          }`}
+        >
           <DialogHeader>
-            <DialogTitle className="text-foreground text-lg font-semibold">
+            <DialogTitle
+              className={`text-lg font-semibold transition-colors duration-300 ${
+                isDark ? "text-foreground" : "text-[#1A1A1A]"
+              }`}
+            >
               Modifier la Conversation
             </DialogTitle>
           </DialogHeader>
@@ -453,7 +577,11 @@ export function Sidebar({
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
               placeholder="Nom de la conversation..."
-              className="w-full bg-white/[0.02] border border-white/[0.1] rounded-lg px-4 py-2.5 text-foreground placeholder-foreground/40 focus:outline-none focus:border-primary/50 focus:bg-white/[0.05] transition-colors text-sm"
+              className={`w-full border rounded-lg px-4 py-2.5 focus:outline-none transition-all text-sm ${
+                isDark
+                  ? "bg-white/[0.02] border-white/[0.1] text-foreground placeholder-foreground/40 focus:border-primary/50 focus:bg-white/[0.05]"
+                  : "bg-[#FFFFFF] border-black/[0.08] text-[#1A1A1A] placeholder-[#3F3F3F]/40 focus:border-primary/50 focus:bg-[#FFFFFF]"
+              }`}
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
                   handleSaveEdit();
@@ -465,13 +593,21 @@ export function Sidebar({
           <DialogFooter className="gap-2">
             <button
               onClick={() => setIsDialogOpen(false)}
-              className="px-4 py-2.5 text-foreground/70 border border-white/[0.1] rounded-lg hover:bg-white/[0.05] transition-colors text-sm font-medium hover:-translate-y-0.5"
+              className={`px-4 py-2.5 border rounded-lg transition-all text-sm font-medium hover:-translate-y-0.5 ${
+                isDark
+                  ? "text-foreground/70 border-white/[0.1] hover:bg-white/[0.05]"
+                  : "text-[#3F3F3F]/70 border-black/[0.08] hover:bg-black/[0.05]"
+              }`}
             >
               Annuler
             </button>
             <button
               onClick={handleSaveEdit}
-              className="px-4 py-2.5 bg-primary/20 text-primary border border-primary/30 rounded-lg hover:bg-primary/30 transition-colors font-medium text-sm hover:-translate-y-0.5"
+              className={`px-4 py-2.5 border rounded-lg transition-all font-medium text-sm hover:-translate-y-0.5 ${
+                isDark
+                  ? "bg-primary/20 text-primary border-primary/30 hover:bg-primary/30"
+                  : "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20"
+              }`}
             >
               Enregistrer
             </button>
