@@ -303,9 +303,9 @@ export function Sidebar({
           <button
             id="new-conversation-btn"
             onClick={handleNewConversation}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-primary/20 hover:bg-primary/30 text-primary font-medium text-xs rounded-lg transition-all duration-200 hover-lift"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-primary/20 hover:bg-primary/30 text-primary font-medium text-xs rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95"
           >
-            <Plus size={14} />
+            <Plus size={16} className="flex-shrink-0" />
             <span>New</span>
           </button>
         </div>
