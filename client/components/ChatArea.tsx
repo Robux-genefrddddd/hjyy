@@ -447,7 +447,11 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
             </div>
           ) : (
             <div className="space-y-3 pb-4">
-              {chatMessages.map((msg) => (
+              {chatMessages.map((msg, index) => {
+                const isLastMessage = index === chatMessages.length - 1;
+                const displayContent = isLastMessage && isTyping ? typingText : msg.content;
+
+                return (
                 <div
                   key={msg.id}
                   className={`flex w-full ${
@@ -506,7 +510,7 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                           }}
                         >
                           <MessageRenderer
-                            content={msg.content}
+                            content={displayContent}
                             role={msg.role}
                           />
                         </div>
@@ -514,14 +518,15 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                     </div>
                   )}
                 </div>
-              ))}
-              {(loading || isThinking) && (
+                );
+              })}
+              {(loading || isThinking || isTyping) && (
                 <div className="flex w-full justify-start animate-springFade">
                   <div className="flex gap-2 items-start max-w-lg">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center flex-shrink-0 shadow-md border border-orange-400/50">
                       <span className="text-xs font-bold text-white">V</span>
                     </div>
-                    <ThinkingAnimation />
+                    {isTyping ? <TypingIndicator /> : <ThinkingAnimation />}
                   </div>
                 </div>
               )}
