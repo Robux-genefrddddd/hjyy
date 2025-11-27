@@ -270,11 +270,21 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
         {!conversationId ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
+              <div
+                className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center border-2 border-foreground/20 animate-scaleIn"
+                style={{
+                  backgroundImage:
+                    "url(https://cdn.builder.io/api/v1/image/assets%2Fafa67d28f8874020a08a6dc1ed05801d%2F340d671f0c4b45db8b30096668d2bc7c)",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
+                  backgroundSize: "cover",
+                }}
+              />
               <h2 className="text-lg font-semibold text-foreground mb-2 animate-slideUp">
                 Sélectionnez une conversation
               </h2>
               <p
-                className="text-sm text-muted-foreground animate-slideUp"
+                className="text-sm text-foreground/60 animate-slideUp"
                 style={{ animationDelay: "0.1s" }}
               >
                 Cliquez sur une conversation à gauche pour commencer
@@ -283,16 +293,26 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
           </div>
         ) : loadingMessages ? (
           <div className="flex-1 flex items-center justify-center">
-            <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+            <Loader2 className="w-8 h-8 animate-spin text-foreground/50" />
           </div>
         ) : chatMessages.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
+              <div
+                className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center border-2 border-foreground/20 animate-scaleIn"
+                style={{
+                  backgroundImage:
+                    "url(https://cdn.builder.io/api/v1/image/assets%2Fafa67d28f8874020a08a6dc1ed05801d%2F340d671f0c4b45db8b30096668d2bc7c)",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
+                  backgroundSize: "cover",
+                }}
+              />
               <h2 className="text-lg font-semibold text-foreground mb-2 animate-slideUp">
                 Commencez une conversation
               </h2>
               <p
-                className="text-sm text-muted-foreground animate-slideUp"
+                className="text-sm text-foreground/60 animate-slideUp"
                 style={{ animationDelay: "0.1s" }}
               >
                 Tapez un message ci-dessous pour commencer
@@ -300,7 +320,7 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
             </div>
           </div>
         ) : (
-          <div className="space-y-4 pb-4">
+          <div className="space-y-6 pb-4">
             {chatMessages.map((msg) => (
               <div
                 key={msg.id}
