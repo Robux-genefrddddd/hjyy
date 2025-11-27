@@ -165,7 +165,7 @@ function parseMarkdownElements(text: string): ReactNode[] {
             className="list-decimal list-inside mb-3 space-y-2 text-white/90 pl-2"
           >
             {listItems.map((item, idx) => (
-              <li key={idx} className="text-white/90 leading-relaxed">
+              <li key={idx} className="text-white/90 leading-[1.55]">
                 {parseInlineMarkdown(item)}
               </li>
             ))}
@@ -178,7 +178,7 @@ function parseMarkdownElements(text: string): ReactNode[] {
             className="list-disc list-inside mb-3 space-y-2 text-white/90 pl-2"
           >
             {listItems.map((item, idx) => (
-              <li key={idx} className="text-white/90 leading-relaxed">
+              <li key={idx} className="text-white/90 leading-[1.55]">
                 {parseInlineMarkdown(item)}
               </li>
             ))}
