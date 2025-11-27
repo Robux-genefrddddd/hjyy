@@ -87,13 +87,14 @@ export function createServer() {
   // AI chat route
   app.post("/api/ai/chat", handleAIChat);
 
-  // Admin routes (require authentication)
-  app.post("/api/admin/verify", handleVerifyAdmin);
-  app.post("/api/admin/ban-user", handleBanUser);
-  app.post("/api/admin/ban-ip", handleBanIP);
-  app.post("/api/admin/delete-user", handleDeleteUser);
-  app.get("/api/admin/users", handleGetAllUsers);
-  app.post("/api/admin/create-license", handleCreateLicense);
+  // Admin routes (require authentication + stricter rate limiting)
+  const adminRateLimit = rateLimit(60000, 10); // 10 requests per minute per IP
+  app.post("/api/admin/verify", adminRateLimit, handleVerifyAdmin);
+  app.post("/api/admin/ban-user", adminRateLimit, handleBanUser);
+  app.post("/api/admin/ban-ip", adminRateLimit, handleBanIP);
+  app.post("/api/admin/delete-user", adminRateLimit, handleDeleteUser);
+  app.get("/api/admin/users", adminRateLimit, handleGetAllUsers);
+  app.post("/api/admin/create-license", adminRateLimit, handleCreateLicense);
 
   // 404 handler
   app.use((_req, res) => {
