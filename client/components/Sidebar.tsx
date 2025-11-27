@@ -326,17 +326,17 @@ export function Sidebar({
                 }}
               >
                 <div
-                  className={`flex items-center gap-2 px-2 py-2.5 rounded-lg transition-all border ${
+                  className={`flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all border shadow-sm group-hover:-translate-y-0.5 ${
                     conv.id === activeConversationId
-                      ? "bg-primary/15 border-primary/40 text-foreground"
-                      : "border-white/[0.08] hover:bg-white/[0.05] text-muted-foreground hover:text-foreground"
+                      ? "bg-primary/15 border-primary/50 text-foreground shadow-md"
+                      : "border-white/[0.08] hover:bg-white/[0.05] text-muted-foreground hover:text-foreground hover:shadow-md"
                   }`}
                 >
                   <button
                     onClick={() => onConversationSelect?.(conv.id)}
-                    className={`flex-1 text-left text-sm transition-all py-1 px-2 rounded ${
+                    className={`flex-1 text-left text-sm transition-all py-1 px-2 rounded-lg ${
                       conv.id === activeConversationId
-                        ? "text-foreground"
+                        ? "text-foreground font-medium"
                         : "text-foreground/70 hover:text-foreground"
                     }`}
                   >
@@ -345,14 +345,14 @@ export function Sidebar({
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => handleEditConversation(conv.id, conv.name)}
-                      className="p-1 text-foreground/70 hover:text-foreground hover:bg-white/10 rounded transition-colors"
+                      className="p-1.5 text-foreground/60 hover:text-foreground hover:bg-white/10 rounded-lg transition-all hover:-translate-y-0.5"
                       title="Edit"
                     >
                       <Edit2 size={14} />
                     </button>
                     <button
                       onClick={() => handleDeleteConversation(conv.id)}
-                      className="p-1 text-foreground/70 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors"
+                      className="p-1.5 text-foreground/60 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all hover:-translate-y-0.5"
                       title="Delete"
                     >
                       <Trash2 size={14} />
