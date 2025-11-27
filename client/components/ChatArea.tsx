@@ -709,10 +709,16 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
               <button
                 onClick={handleSend}
                 disabled={loading || !message.trim()}
-                className="p-2 text-white/40 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 rounded-lg flex items-center justify-center flex-shrink-0 hover:scale-110 active:scale-95"
+                className={`p-2 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 rounded-lg flex items-center justify-center flex-shrink-0 hover:scale-110 active:scale-95 ${
+                  isDark
+                    ? "text-white/40 hover:text-white"
+                    : "text-[#3F3F3F]/40 hover:text-[#3F3F3F]"
+                }`}
                 style={{
                   color: !message.trim()
-                    ? "rgba(255, 255, 255, 0.3)"
+                    ? isDark
+                      ? "rgba(255, 255, 255, 0.3)"
+                      : "rgba(63, 63, 63, 0.3)"
                     : "#3b82f6",
                 }}
                 aria-label="Envoyer le message"
