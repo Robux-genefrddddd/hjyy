@@ -101,9 +101,16 @@ export function createServer() {
   app.get("/api/admin/users", adminRateLimit, handleGetAllUsers);
   app.post("/api/admin/create-license", adminRateLimit, handleCreateLicense);
 
-  // 404 handler
-  app.use((_req, res) => {
-    res.status(404).json({ error: "Not found" });
+  // 404 handler - only for API routes
+  app.use((req, res) => {
+    // If it's an API request, return JSON 404
+    if (req.path.startsWith("/api/")) {
+      res.status(404).json({ error: "Not found" });
+    } else {
+      // For non-API routes, let the frontend handle it (in dev, Vite will serve index.html)
+      // In production, the static files will be served by the hosting provider
+      res.status(404).send("Not found");
+    }
   });
 
   // Error handler
