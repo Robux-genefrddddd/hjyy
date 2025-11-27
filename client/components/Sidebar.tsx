@@ -220,8 +220,11 @@ export function Sidebar({
         {/* Header - Minimal */}
         <div className="p-3 sm:p-3 animate-fadeIn border-b border-white/[0.08]">
           <div className="flex items-center gap-2.5 justify-between mb-2.5">
-            <div className="flex items-center gap-2 min-w-0 flex-1">
-              <div className="w-7 h-7 bg-gradient-to-br from-primary/80 to-primary rounded-lg flex items-center justify-center text-primary-foreground text-xs font-semibold flex-shrink-0 shadow-md hover-lift">
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="flex items-center gap-2 min-w-0 flex-1 hover:opacity-80 transition-opacity rounded-lg p-1 -m-1"
+            >
+              <div className="w-8 h-8 bg-gradient-to-br from-primary/80 to-primary rounded-full flex items-center justify-center text-primary-foreground text-xs font-semibold flex-shrink-0 shadow-md border border-primary/30 hover-lift">
                 {userInitial}
               </div>
               <div className="hidden sm:block min-w-0 flex-1">
@@ -232,7 +235,7 @@ export function Sidebar({
                   {loading ? "..." : userData?.email?.split("@")[0] || "Pro"}
                 </p>
               </div>
-            </div>
+            </button>
             <div className="flex items-center gap-1.5">
               <button
                 onClick={onClose}
